@@ -1,2 +1,2 @@
 # cmsacamp-eda-project
-First time using github for CMSAC
+WNBA Shot Analysis from data thru June 5th of the 2021 WNBA season
