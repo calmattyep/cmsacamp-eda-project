@@ -25,9 +25,13 @@ wnba_shots <- wnba_shots %>%
 wnba_shots <- filter(wnba_shots, 
          str_detect(type_text, "Free Throw", negate = TRUE))
 
-#add column of 1s, then apply sum as the function 
-column_of_ones = replicate(6438, 1)
+#Add column of 1s. This is helpful for hexagonal shot chart
+column_of_ones <- replicate(6438, 1)
 wnba_shots <- mutate(wnba_shots, "shot_taken" = column_of_ones)
+
+#write_csv(wnba_shots, "/Users/matthewyep/Desktop/Carnegie Mellon/cmsacamp-eda-project/wnba_shots.csv")
+
+wnba_shots <- read_csv("/Users/matthewyep/Desktop/Carnegie Mellon/cmsacamp-eda-project/wnba_shots.csv")
 
 # Graoh of where teams make and miss shots
 geom_basketball(league = "WNBA", full_surf = FALSE, rotate = TRUE) +
@@ -39,11 +43,13 @@ geom_basketball(league = "WNBA", full_surf = FALSE, rotate = TRUE) +
   # Facet by team name and make 4 columns of plots
   facet_wrap(~ team_name, ncol = 4)
 
+
+#Graph of each team's favorite spots to shoot
 geom_basketball(league = "WNBA", full_surf = FALSE, rotate = TRUE) + 
   stat_summary_hex(data = filter(wnba_shots, coordinate_y <= 40), 
                    mapping = aes(x = coordinate_x - 25, y = coordinate_y - 47 + 4, 
                                  z = shot_taken, group = -1), 
-                   binwidth = c(3,3),
+                   binwidth = c(4,4),
                    fun = function(x) ifelse (length(x) > 8, sum(x), NA)) +
   scale_fill_gradient(low = "darkblue", high = "darkorange") +
   facet_wrap(~ team_name, ncol = 4) + theme(legend.position = "bottom") +
